@@ -2,6 +2,10 @@ Revision history for Bot::Twatterhose
 
 {{$NEXT}}
 
+0.02 2010-04-26 12:13:03
+
+    - Correct module name in Changes file
+
 0.01 2010-04-26 12:10:40
 
     - Initial CPAN release
