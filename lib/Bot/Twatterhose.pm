@@ -109,8 +109,12 @@ sub run {
                 exit 0;
             }
         } else {
-            $hailo->learn($text);
-            say sprintf "Got twat %d/%d: %s", $data->{count}, $self->limit, $text;
+            if ($text =~ /^[[:ascii:]]+$/ and $text !~ /\n/) {
+                $hailo->learn($text);
+                say sprintf "Got twat %d/%d: %s", $data->{count}, $self->limit, $text;
+            } else {
+                say sprintf "NOT twat %d/%d: %s", $data->{count}, $self->limit, $text;
+            }
         }
     };
 

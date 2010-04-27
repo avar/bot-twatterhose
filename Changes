@@ -2,6 +2,10 @@ Revision history for Bot::Twatterhose
 
 {{$NEXT}}
 
+    - Don't learn from non-ASCII input on Twitter. It's too complex to
+      handle south-east asian languages and others that don't split
+      their words on whitespace.
+
 0.02 2010-04-26 12:13:03
 
     - Correct module name in Changes file
