@@ -2,6 +2,8 @@ Revision history for Bot::Twatterhose
 
 {{$NEXT}}
 
+0.04 2010-05-21 15:42:05
+
     - Fix Makefile.PL breakage caused by Dist::Zilla FAIL:
       http://github.com/rjbs/dist-zilla/commit/2e47b6c205
 
