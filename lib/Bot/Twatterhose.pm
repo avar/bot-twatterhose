@@ -6,7 +6,7 @@ use Any::Moose 'X::Getopt';
 use Any::Moose 'X::Types::'.any_moose() => [qw/Int Str Bool HashRef/];
 use JSON;
 use Hailo;
-use Net::Twitter::Lite;
+use Net::Twitter;
 use Scalar::Util qw(blessed);
 use namespace::clean -except => 'meta';
 
@@ -36,6 +36,34 @@ has password => (
     documentation => "Your Twitter password",
 );
 
+has consumer_key => (
+    traits        => [ qw/ Getopt / ],
+    isa           => Str,
+    is            => 'ro',
+    documentation => "Your Twitter user OAuth consumer key",
+);
+
+has consumer_secret => (
+    traits        => [ qw/ Getopt / ],
+    isa           => Str,
+    is            => 'ro',
+    documentation => "Your Twitter user OAuth consumer secret",
+);
+
+has access_token => (
+    traits        => [ qw/ Getopt / ],
+    isa           => Str,
+    is            => 'ro',
+    documentation => "Your Twitter user OAuth access token",
+);
+
+has access_token_secret => (
+    traits        => [ qw/ Getopt / ],
+    isa           => Str,
+    is            => 'ro',
+    documentation => "Your Twitter user OAuth secret access token",
+);
+
 has brain => (
     traits        => [ qw/ Getopt / ],
     isa           => Str,
@@ -55,7 +83,7 @@ has limit => (
 
 has _twatter => (
     traits        => [ qw/ NoGetopt / ],
-    isa           => 'Net::Twitter::Lite',
+    isa           => 'Net::Twitter',
     is            => 'ro',
     documentation => "Net::Twatter::Lite instance",
     lazy_build    => 1,
@@ -64,13 +92,12 @@ has _twatter => (
 sub _build__twatter {
     my ($self) = @_;
 
-    my $twatter = Net::Twitter::Lite->new(
-        username   => $self->username,
-        password   => $self->password,
-        source     => 'twatterhose',
-        traits     => ['API::REST'],
-        clientname => 'Twatterhose twatterbot',
-        clienturl  => 'http://github.com/avar/bot-twatterhose',
+    my $twatter = Net::Twitter->new(
+        traits              => [qw/OAuth API::REST/],
+        consumer_key        => $self->consumer_key,
+        consumer_secret     => $self->consumer_secret,
+        access_token        => $self->access_token,
+        access_token_secret => $self->access_token_secret,
     );
 
     return $twatter;
@@ -134,7 +161,7 @@ sub twatterhose {
     my ($self, $callback) = @_;
 
     my ($username, $password) = map { $self->$_ } qw(username password);
-    my $cmd = "curl -s http://stream.twitter.com/1/statuses/sample.json -u${username}:${password}";
+    my $cmd = "curl -s https://stream.twitter.com/1.1/statuses/sample.json -u${username}:'${password}'";
     open my $twitter, "$cmd |";
 
     my $data = {};
